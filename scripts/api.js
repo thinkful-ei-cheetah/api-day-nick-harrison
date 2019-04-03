@@ -16,7 +16,9 @@ const api = function() {
 
     return fetch(BASE_URL + '/items', {
       method: 'POST',
-      headers: '"Content-Type": "application/json"',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: newItem
     });
   }

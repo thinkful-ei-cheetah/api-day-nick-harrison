@@ -13,12 +13,12 @@ api.getItems()
   .then(res => res.json())
   .then(data => console.log(data));
 
-api.createItem('bread')
+  api.createItem('pears')
   .then(res => res.json())
-  .then(newItem => {
+  .then((newItem) => {
     return api.getItems();
   })
   .then(res => res.json())
-  .then(items => {
+  .then((items) => {
     console.log(items);
   });
