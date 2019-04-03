@@ -17,7 +17,7 @@ const store = (function(){
 
   const findAndUpdate = function(id, newData){
     let item = this.findById(id);
-    return Object.assign(item,newData);
+    Object.assign(item, newData);
   };
 
   const toggleCheckedFilter = function() {
