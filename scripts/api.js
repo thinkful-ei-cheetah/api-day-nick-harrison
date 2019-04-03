@@ -22,10 +22,12 @@ const api = function() {
       body: newItem
     });
   }
-  function updateItem(id,updateData){
-    let data=JSON.stringify(updateData);
+  function updateItem(id, updateData){
+    let data = JSON.stringify(updateData);
+    
     console.log(data);
-    return fetch(`${BASE_URL}/items/${id}`,{
+
+    return fetch(`${BASE_URL}/items/${id}`, {
       method:'PATCH',
       headers:{
         'Content-Type':'application/json'
