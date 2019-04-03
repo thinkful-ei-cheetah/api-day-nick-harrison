@@ -62,6 +62,11 @@ const shoppingList = (function(){
     $('.js-shopping-list').html(shoppingListItemsString);
   }
   
+  function handleErrorCloseClicked() {
+    $('.error-bar').on('click', '#close-error-button', event => {
+      $('.error-bar').addClass('hidden');
+    });
+  }
   
   function handleNewItemSubmit() {
     $('#js-shopping-list-form').submit(function (event) {
@@ -69,17 +74,18 @@ const shoppingList = (function(){
       const newItemName = $('.js-shopping-list-entry').val();
       $('.js-shopping-list-entry').val('');
       api.createItem(newItemName)
-        .then(
-          res=> {
-            if (!res.ok){
-              throw new Error(res.status);
-            }
-            return res.json()})
         .then((newItem) => {
           store.addItem(newItem);
           render();
-        }).catch(e=>console.log(e));
-      render();
+        })
+        .catch((err) => {
+          $('.error-bar').removeClass('hidden')
+            .html(
+              `<h4>ERROR ${err.code}: ${err.message}</h4>
+               <button role="close-error-bar" id="close-error-button">X</button>`);
+        });
+      
+      // render();
     });
   }
   
@@ -94,16 +100,18 @@ const shoppingList = (function(){
       const id = getItemIdFromElement(event.currentTarget);
       const item = store.findById(id);
       api.getItems()
-        .then(res => res.json())
         .then((items) => {
-          // const item = store.findById(id);
-          // console.log(item);
           return api.updateItem(item.id, { checked: !item.checked });
         })
-        .then(res => res.json())
         .then(() => {       
           store.findAndUpdate(id, {checked: !item.checked});
           render();
+        })
+        .catch((err) => {
+          $('.error-bar').removeClass('hidden')
+            .html(
+              `<h4>ERROR ${err.code}: ${err.message}</h4>
+               <button role="close-error-bar" id="close-error-button">X</button>`);
         });
     });
   }
@@ -114,7 +122,12 @@ const shoppingList = (function(){
       // get the index of the item in store.items
       const id = getItemIdFromElement(event.currentTarget);
       // delete the item
-      api.deleteItem(id);
+      api.deleteItem(id).catch((err) => {
+        $('.error-bar').removeClass('hidden')
+          .html(
+            `<h4>ERROR ${err.code}: ${err.message}</h4>
+             <button role="close-error-bar" id="close-error-button">X</button>`);
+      });
       store.findAndDelete(id);
       // render the updated shopping list
       render();
@@ -128,23 +141,21 @@ const shoppingList = (function(){
       const itemName = $(event.currentTarget).find('.shopping-item').val();
 
       api.getItems()
-        .then(res => res.json())
         .then((items) => {
           const item = store.findById(id);
           return api.updateItem(item.id, { name: itemName });
         })
-        .then(res => res.json())
         .then(() => {
           store.findAndUpdate(id, {name: itemName});
+          store.setItemIsEditing(id, false);
           render();
+        })
+        .catch((err) => {
+          $('.error-bar').removeClass('hidden')
+            .html(
+              `<h4>ERROR ${err.code}: ${err.message}</h4>
+               <button role="close-error-bar" id="close-error-button">X</button>`);
         });
-    });
-  }
-  
-  function handleToggleFilterClick() {
-    $('.js-filter-checked').click(() => {
-      store.toggleCheckedFilter();
-      render();
     });
   }
   
@@ -169,9 +180,9 @@ const shoppingList = (function(){
     handleItemCheckClicked();
     handleDeleteItemClicked();
     handleEditShoppingItemSubmit();
-    handleToggleFilterClick();
     handleShoppingListSearch();
     handleItemStartEditing();
+    handleErrorCloseClicked();
   }
 
   // This object contains the only exposed methods from this module:

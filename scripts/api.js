@@ -4,7 +4,7 @@ const api = function() {
   const  BASE_URL = 'https://thinkful-list-api.herokuapp.com/nick-harrison';
 
   function getItems() {
-    return fetch(BASE_URL + '/items');
+    return shoppingListApiFetch(BASE_URL + '/items');
   }
 
   function createItem(name) {
@@ -14,7 +14,7 @@ const api = function() {
 
     newItem = JSON.stringify(newItem);
 
-    return fetch(BASE_URL + '/items', {
+    return shoppingListApiFetch(BASE_URL + '/items', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -27,7 +27,7 @@ const api = function() {
     
     // console.log(data);
 
-    return fetch(`${BASE_URL}/items/${id}`, {
+    return shoppingListApiFetch(`${BASE_URL}/items/${id}`, {
       method:'PATCH',
       headers:{
         'Content-Type':'application/json'
@@ -36,11 +36,12 @@ const api = function() {
     });
   }
   function deleteItem(id){
-    return fetch(`${BASE_URL}/items/${id}`, {
+    return shoppingListApiFetch(`${BASE_URL}/items/${id}`, {
       method:'DELETE'
     });
   }
-  function listApiFetch(...args) {
+
+  function shoppingListApiFetch(...args) {
     let error;
     return fetch(...args)
       .then(res => {
@@ -62,7 +63,7 @@ const api = function() {
   
         // Otherwise give back the data as resolved Promise
         return data;
-      })
+      });
   }
 
   return {

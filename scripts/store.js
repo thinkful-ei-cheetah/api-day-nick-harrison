@@ -33,17 +33,29 @@ const store = (function(){
     this.searchTerm = term;
   };
 
+  const setError = function(status, msg = '') {
+    this.error.exists = !this.error.exists;
+    this.error.message = msg;
+  }
+
   return {
     items: [],
     hideCheckedItems: false,
     searchTerm: '',
+    
+    error: {
+      exists: false,
+      message: ''
+    },
+
     addItem,
     findById,
     findAndDelete, 
     toggleCheckedFilter,
     setSearchTerm,
     setItemIsEditing,
-    findAndUpdate
+    findAndUpdate,
+    setError
   };
   
 }());

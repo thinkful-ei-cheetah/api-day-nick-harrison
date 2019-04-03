@@ -53,3 +53,23 @@ button:hover:disabled {
 .shopping-item__checked {
   text-decoration: line-through;
 }
+
+.error-bar {
+  height: 50px;
+  color: red;
+  background: white;
+  border: 1px solid red;
+  text-align: center;
+}
+
+h4 {
+  margin: 0;
+  display: inline-block;
+}
+
+#error-close-button {
+  /* float: right;
+  margin-left: -5px; */
+  position: relative;
+  right: 0;
+}
